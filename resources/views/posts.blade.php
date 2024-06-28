@@ -60,15 +60,24 @@
                         <tr>
                           <th> Title </th>
                           <th> Content </th>
-                          <th> User id </th>
+                          <th> Update </th>
+                          <th> Delete </th>
                         </tr>
                       </thead>
                       <tbody>
                         @foreach ($blogs as $blog)
+                        <form action="{{url('update')}}" method="post" enctype="multipart/form-data">
+                        @csrf
                         <tr>
-                            <td>{{$blog->title}}</td>
-                            <td>{{$blog->content}}</td>
-                            <td><a href="{{url('detail/v1', $blog->user_id)}}">{{$blog->user_id}} </a></td>
+                            <input type="text" name="id" value="{{$blog->id}}" hidden>
+                            <td><input type="text" name="title" placeholder="{{$blog->title}}" value="{{$blog->title}}" style="color: black;"></td>
+                            <td><input type="text" name="content" placeholder="{{$blog->content}}" value="{{$blog->content}}" style="color: black;"></td>
+                            <td><input type="submit" class="btn-close" value="update"></td>
+                        </form>
+                        <form action="{{url('delete', $blog->id)}}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <td><input type="submit" class="btn-close" value="delete"></td>
+                        </form>
                         </tr>
 
                         @endforeach
@@ -78,57 +87,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="container-fluid page-body-wrapper">
-            <div class="container" align="center">
-                <h1 class="title">Create Blog Post V1</h1>
-
-                <form action="{{url('blog/v1')}}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div style="padding-top: 15px">
-                        <label>Blog title</label>
-                        <input type="text" name="title" placeholder="Give a blog title" required style="color: black;">
-                    <div>
-
-                    <div style="padding-top: 15px">
-                        <label>Content</label>
-                        <input type="text" name="content" placeholder="Give a content" required style="color: black;">
-                    <div>
-
-                    <div style="padding-top: 15px">
-                        <x-button class="ms-4">
-                            <input type="submit" class="btn-close">
-                        </x-button>
-                    <div>
-                </form>
-
-            <div>
-        </div>
-
-        <div class="container-fluid page-body-wrapper">
-            <div class="container" align="center">
-                <h1 class="title">Create Blog Post V2</h1>
-
-                <form action="{{url('blog/v2')}}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div style="padding-top: 15px">
-                        <label>Blog title</label>
-                        <input type="text" name="title" placeholder="Give a blog title" required style="color: black;">
-                    <div>
-
-                    <div style="padding-top: 15px">
-                        <label>Content</label>
-                        <input type="text" name="content" placeholder="Give a content" required style="color: black;">
-                    <div>
-
-                    <div style="padding-top: 15px">
-                        <x-button class="ms-4">
-                            <input type="submit" class="btn-close">
-                        </x-button>
-                    <div>
-                </form>
-
-            <div>
         </div>
     </body>
 </html>

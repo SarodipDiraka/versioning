@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Services\CreateBlogService;
+use App\Services\UpdateBlogService;
+use App\Services\DeleteBlogService;
 use App\Models\Blog;
 
 
@@ -20,6 +22,8 @@ class BlogController extends Controller
     {
         $this->blogRepository = $blogRepository;
         $this->createBlogService = new createBlogService;
+        $this->updateBlogService = new updateBlogService;
+        $this->deleteBlogService = new deleteBlogService;
     }
 
     public function index()
@@ -29,11 +33,22 @@ class BlogController extends Controller
         return view('blog', compact('blogs'));
     }
 
-    public function detail($id, ?string $version = null)
+    public function detailV1($id)
     {
         $blogs = $this->blogRepository->getByUser($id);
 
         return view('blog', compact('blogs'));
+    }
+
+    public function detailV2()
+    {
+        if(Auth::id())
+        {
+            $blogs = $this->blogRepository->getByUser(Auth::id());
+
+            return view('posts', compact('blogs'));
+        }
+        else return redirect('/');
     }
 
     public function blogV1(Request $request)
@@ -58,7 +73,34 @@ class BlogController extends Controller
                 $user = auth()->user();
             }
     
-            return redirect('/detail'.'/'.$user->id);
+            return redirect('/detail'.'/v2'.$user->id);
+        
+    
+    }
+
+    public function update(Request $request)
+    {
+       
+            if(Auth::id())
+            {
+                $this->updateBlogService->make($request);
+                $user = auth()->user();
+            }
+    
+            return redirect('/detail'.'/v2');
+        
+    
+    }
+    public function delete($id)
+    {
+       
+            if(Auth::id())
+            {
+                $this->deleteBlogService->make($id);
+                $user = auth()->user();
+            }
+    
+            return redirect('/detail'.'/v2');
         
     
     }
